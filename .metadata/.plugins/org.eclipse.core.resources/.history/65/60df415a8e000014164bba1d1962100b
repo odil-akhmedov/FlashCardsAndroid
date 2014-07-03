@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.wsu.flashcardsaok.MainActivity" >
+
+    <item
+        android:id="@+id/addition"
+        android:title="Addition"
+        android:titleCondensed="Add">
+    </item>
+    <item
+        android:id="@+id/substraction"
+        android:title="Substraction"
+        android:titleCondensed="Subs">
+    </item>
+    <item
+        android:id="@+id/multiplication"
+        android:title="Multiplication"
+        android:titleCondensed="Multiply">
+    </item>
+    <item
+        android:id="@+id/division"
+        android:title="Division"
+        android:titleCondensed="Div">
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+
+</menu>

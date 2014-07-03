@@ -1,0 +1,366 @@
+package com.wsu.flashcardsaok;
+
+import java.util.Random;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class CalculationActivity extends Activity implements OnClickListener {
+	final String TAG = "CalculationActivity";
+	static int operand1, operand2, answer; // only 1 of 3 answers is correct
+	static int arr[] = { 0, 0, 0 }; // for random locations for answers
+	static boolean correct; // status of the choice
+	static int tryNum = 0;
+	static Random r = new Random();
+	static int counter = 0, trueCounter = 0;
+	static Button option1, option2, option3;
+	static TextView scoreBoard, questionField;
+	static boolean first = true; // first time invoking activity?
+	static boolean fromSettings = false;
+	static ImageButton emoticon;
+	static String orientation; // "port" for portrait view, "land" for landscape
+	static char operation; // + for addition, - for substraction,
+	// * for multiplication, / for division
+	Bundle extras;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		final MediaPlayer mpTrue = MediaPlayer.create(this,
+				R.raw.correct_answer); // gong sound
+		final MediaPlayer mpFalse = MediaPlayer
+				.create(this, R.raw.wrong_answer); // unpleasant buzzer sound
+
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			setContentView(R.layout.activity_calculation); // default layout
+			orientation = "port";
+		} else {
+			setContentView(R.layout.activity_calculation_land); // alternative
+																// layout
+			orientation = "land";
+		}
+
+		/************ active widgets ******************/
+		questionField = (TextView) findViewById(R.id.questionField);
+		option1 = (Button) findViewById(R.id.option1);
+		option2 = (Button) findViewById(R.id.option2);
+		option3 = (Button) findViewById(R.id.option3);
+		scoreBoard = (TextView) findViewById(R.id.scoreBoard);
+		emoticon = (ImageButton) findViewById(R.id.emoticon);
+		/*************/
+		Button calcAct = (Button) findViewById(R.id.calcuAct);
+
+		extras = getIntent().getExtras();
+		if (extras != null) {
+			operation = extras.getChar("OPERATION");
+			extras.remove("OPERATION");
+		}
+		
+		if (first == true && operation != null) { // first time invoking activity?
+			createQuestion(questionField, r);
+			// operation = '+';
+			first = false;
+		} 
+		
+		
+
+		calcAct.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent myIntent = new Intent(v.getContext(), MainActivity.class);
+				startActivityForResult(myIntent, 0);
+
+			}
+		});
+
+		option1.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				checkAnswer(0, option1);
+				if (correct)
+					mpTrue.start();
+				else
+					mpFalse.start();
+			}
+		});
+
+		option2.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				checkAnswer(1, option2);
+				if (correct)
+					mpTrue.start();
+				else
+					mpFalse.start();
+			}
+		});
+		option3.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				checkAnswer(2, option3);
+				if (correct)
+					mpTrue.start();
+				else
+					mpFalse.start();
+			}
+		});
+
+		if (savedInstanceState != null) {
+			Log.v(TAG, "onRestoreInstanceState called");
+			Log.v(TAG, "Score restored in onRestoreInstanceState = "
+					+ savedInstanceState.getString("MESSAGE")
+					+ savedInstanceState.getInt("OPERAND1")
+					+ savedInstanceState.getInt("OPERAND2")
+					+ savedInstanceState.getIntArray("CHOICES_ARRAY")
+					+ savedInstanceState.getInt("MAIN_COUNTER")
+					+ savedInstanceState.getInt("TRUE_COUNTER")
+					+ savedInstanceState.getChar("OPERATION"));
+		}
+
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		operand1 = savedInstanceState.getInt("OPERAND1");
+		operand2 = savedInstanceState.getInt("OPERAND2");
+		arr = savedInstanceState.getIntArray("CHOICES_ARRAY");
+		counter = savedInstanceState.getInt("MAIN_COUNTER");
+		trueCounter = savedInstanceState.getInt("TRUE_COUNTER");
+		correct = savedInstanceState.getBoolean("CORRECT_OR_NOT");
+		operation = savedInstanceState.getChar("OPERATION");
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putInt("OPERAND1", operand1);
+		outState.putInt("OPERAND2", operand2);
+		outState.putIntArray("CHOICES_ARRAY", arr);
+		outState.putInt("MAIN_COUNTER", counter);
+		outState.putInt("TRUE_COUNTER", trueCounter);
+		outState.putBoolean("CORRECT_OR_NOT", correct);
+		outState.putChar("OPERATION", operation);
+
+	}
+
+	/******** Menu handler ********************/
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.calculation, menu);
+		return true;
+	}
+	/****** Back Button******/
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+		switch (menuItem.getItemId()) {
+		case R.id.addition: // do something
+			operation = '+';
+			first = true;
+			finish();
+			startActivity(getIntent());
+
+			return true;
+		case R.id.substraction:
+			operation = '-';
+			//first = true;
+			finish();
+			startActivity(getIntent());
+			return true;
+		case R.id.multiplication: // do something else
+			operation = '*';
+			//first = true;
+			finish();
+			startActivity(getIntent());
+			return true;
+		case R.id.division: // do something else
+			operation = '/';
+			operand2++;
+			//first = true;
+			finish();
+			startActivity(getIntent());
+			return true;
+		default:
+			return super.onOptionsItemSelected(menuItem);
+		}
+	}
+
+	static void createQuestion(TextView questionField, Random r) {
+		operand1 = r.nextInt(10);
+		operand2 = r.nextInt(10);
+
+		switch (operation) {
+		case '+':
+			answer = operand1 + operand2;
+			break;
+		case '-':
+			answer = operand1 - operand2;
+			break;
+		case '*':
+			answer = operand1 * operand2;
+			break;
+		case '/':
+			answer = operand1 / operand2;
+			break;
+		}
+
+		questionField.setText(operand1 + " " + operation + " " + operand2
+				+ " = ?");
+		// Answers differ from the correct one in the range of +-3
+		// So finding the answer is a little bit challenging
+		arr[0] = answer + r.nextInt(3) + 1;
+		arr[1] = answer - r.nextInt(3) - 1;
+		arr[2] = answer;
+		shuffleArray(arr); // Everytime answer is in another position
+
+		// Filling up the buttons with the choices
+		option1.setText("" + arr[0] + "");
+		option2.setText("" + arr[1] + "");
+		option3.setText("" + arr[2] + "");
+
+	}
+
+	static void shuffleArray(int[] ar) { // pretty easy algorithm
+		Random rnd = new Random();
+		for (int i = ar.length - 1; i > 0; i--) {
+			int index = rnd.nextInt(i + 1);
+			// Simple swap
+			int a = ar[index];
+			ar[index] = ar[i];
+			ar[i] = a;
+		}
+	}
+
+	static void checkAnswer(int i, View v) {
+
+		if (arr[i] == answer) {
+			correct = true;
+			emoticon.setBackgroundResource(R.drawable.true_emoticon);
+			v.setBackgroundResource(R.drawable.flash_card_button_true);
+			createQuestion(questionField, r);
+
+			if (tryNum == 0) // whenever user finds the correct answer
+				trueCounter++; // from the first attempt, we increse the
+								// correct counter
+			else
+				tryNum = 0;
+
+			counter++; // we increase the general counter anyways
+			scoreBoard.setText("" + trueCounter + "/" + counter); // updating
+																	// scoreboard
+			restoreCardsBG();
+
+		} else {
+			tryNum++;
+			correct = false;
+			emoticon.setBackgroundResource(R.drawable.false_emoticon);
+			v.setBackgroundResource(R.drawable.flash_card_button_false);
+			v.setEnabled(false);
+		}
+
+	}
+
+	private static void restoreCardsBG() {
+		// Whenever we generate new flashcard, we have to restore
+		// the backgrounds of the answer buttons and make them clickable
+
+		// TODO Auto-generated method stub
+		if (orientation == "port") {
+			option1.setEnabled(true);
+			option2.setEnabled(true);
+			option3.setEnabled(true);
+			option1.setBackgroundResource(R.drawable.flash_card_button);
+			option2.setBackgroundResource(R.drawable.flash_card_button);
+			option3.setBackgroundResource(R.drawable.flash_card_button);
+		} else {
+			option1.setEnabled(true);
+			option2.setEnabled(true);
+			option3.setEnabled(true);
+			option1.setBackgroundResource(R.drawable.flash_card_button_land);
+			option2.setBackgroundResource(R.drawable.flash_card_button_land);
+			option3.setBackgroundResource(R.drawable.flash_card_button_land);
+		}
+	}
+
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		Log.v(TAG, "onRestart method called");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		/********** Saving the data ********/
+
+		scoreBoard.setText("" + trueCounter + "/" + counter);
+		questionField.setText(operand1 + " " + operation + " " + operand2
+				+ " = ?");
+		option1.setText("" + arr[0] + "");
+		option2.setText("" + arr[1] + "");
+		option3.setText("" + arr[2] + "");
+
+		if (correct) {
+			emoticon.setBackgroundResource(R.drawable.true_emoticon);
+		} else
+			emoticon.setBackgroundResource(R.drawable.false_emoticon);
+
+		Log.v(TAG, "onResume method called");
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.v(TAG, "onPause method called");
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+		Log.v(TAG, "onDestroy method called");
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

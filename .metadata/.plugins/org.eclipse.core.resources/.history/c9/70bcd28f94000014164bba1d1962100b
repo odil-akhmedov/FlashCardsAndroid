@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
+    android:orientation="vertical"
+    tools:context="com.wsu.flashcardsaok.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <!-- android:background="@drawable/main_bg" -->
+
+    <RelativeLayout
+        android:background="#fff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="100dp" 
+        android:textColor="@android:color/black">
+
+        <ListView
+            android:id="@+id/menuList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textSize="26pt"
+            android:textStyle="bold"
+            android:textAlignment="center">
+        </ListView>
+    </RelativeLayout>
+
+</LinearLayout>

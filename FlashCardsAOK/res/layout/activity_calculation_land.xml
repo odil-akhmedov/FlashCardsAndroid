@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_fhd"
+    tools:context="com.wsu.flashcardsaok.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true" >
+
+    </TableLayout>
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/questionField"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="31dp" >
+    </TableRow>
+
+    <ImageButton
+        android:id="@+id/emoticon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/tableRow1"
+        android:layout_below="@+id/questionField" />
+
+    <TextView
+        android:id="@+id/questionField"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:layout_alignBottom="@+id/tableLayout1"
+        android:layout_marginLeft="44dp"
+        android:layout_toRightOf="@+id/scoreBoard"
+        android:background="@drawable/question_field"
+        android:paddingLeft="20dp"
+        android:fontFamily="sans-serif-light"
+        android:textColor="#fff"
+        android:text="@string/sampleQuestion"
+        android:textAlignment="center"
+      	android:textSize="26pt"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/scoreBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/questionField"
+        android:layout_toRightOf="@+id/emoticon"
+        android:background="@drawable/cell_shape"
+        android:padding="5dp"
+        android:text="0/0"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="20pt" />
+
+    <Button
+        android:id="@+id/option3"
+        android:layout_width="96dp"
+        android:layout_height="75dp"
+        android:layout_alignBaseline="@+id/option2"
+        android:layout_alignBottom="@+id/option2"
+        android:layout_alignRight="@+id/questionField"
+        android:background="@drawable/flash_card_button_land"
+        android:fontFamily="sans-serif-condensed"
+        android:text="#3"
+        android:textSize="30pt" />
+
+    <Button
+        android:id="@+id/option2"
+        android:layout_width="96dp"
+        android:layout_height="75dp"
+        android:layout_below="@+id/emoticon"
+        android:layout_marginRight="37dp"
+        android:layout_toLeftOf="@+id/option3"
+        android:background="@drawable/flash_card_button_land"
+        android:fontFamily="sans-serif-condensed"
+        android:text="#2"
+        android:textSize="30pt" />
+
+    <Button
+        android:id="@+id/option1"
+        android:layout_width="96dp"
+        android:layout_height="75dp"
+        android:layout_below="@+id/emoticon"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@+id/tableLayout1"
+        android:background="@drawable/flash_card_button_land"
+        android:fontFamily="sans-serif-condensed"
+        android:text="#1"
+        android:textSize="30pt" />
+
+</RelativeLayout>

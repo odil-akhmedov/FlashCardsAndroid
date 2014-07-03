@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FlashCards</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="sampleQuestion">1 + 1 = ?</string>
+    <string name="sampleAnswer">Answer#</string>
+    <string name="trueOrFalse">True or false</string>
+    <string name="startBtn">Start</string>
+    <string name="title_activity_calculation">CalculationActivity</string>
+
+</resources>
