@@ -3,12 +3,10 @@ package com.wsu.flashcardsaok;
 import java.util.Random;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +37,9 @@ public class CalculationActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		setTitle("Flash Cards - The ultimate challenge");
+		
 		final MediaPlayer mpTrue = MediaPlayer.create(this,
 				R.raw.correct_answer); // gong sound
 		final MediaPlayer mpFalse = MediaPlayer
@@ -159,26 +159,21 @@ public class CalculationActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
-	/****** Back Button ******/
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Next will be " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
 		switch (menuItem.getItemId()) {
 		case R.id.addition: // do something
 			operation = '+';
-			//super.onRestart();
 			return true;
 		case R.id.substraction:
 			operation = '-';
-			//super.onRestart();
 			return true;
 		case R.id.multiplication: // do something else
 			operation = '*';
 			return true;
 		case R.id.division: // do something else
 			operation = '/';
-			operand2++;
 			return true;
 		default:
 			return super.onOptionsItemSelected(menuItem);
@@ -200,6 +195,7 @@ public class CalculationActivity extends Activity implements OnClickListener {
 			answer = operand1 * operand2;
 			break;
 		case '/':
+			operand2++;
 			answer = operand1 / operand2;
 			break;
 		}
